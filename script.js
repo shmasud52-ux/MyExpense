@@ -6,20 +6,32 @@
 ============================== */
 
 const EXPENSE_KEY = "myExpenses";
+const SAVINGS_KEY = "mySavings";
 const THEME_KEY = "expenseTheme";
 
 const RESET_PIN = "1234";
+const SAVINGS_PIN = "2233";
 
 const MAX_ATTEMPTS = 3;
 
 const LOCK_TIME = 60 * 1000;
 
+const MIN_SAVINGS = 10;
+
+const DAILY_GOAL = 10;
+
 
 let expenses = [];
+
+let savings = [];
 
 let resetAttempts = 0;
 
 let lockedUntil = 0;
+
+let savingsUnlocked = false;
+
+let activeFilter = "All";
 
 
 /* ==============================
@@ -35,6 +47,12 @@ const amountInput =
 const categoryInput =
     document.getElementById("category");
 
+const foodSubGroup =
+    document.getElementById("foodSubGroup");
+
+const foodSubInput =
+    document.getElementById("foodSub");
+
 const noteInput =
     document.getElementById("note");
 
@@ -46,6 +64,9 @@ const emptyState =
 
 const searchInput =
     document.getElementById("searchInput");
+
+const filterRow =
+    document.getElementById("filterRow");
 
 const monthTotal =
     document.getElementById("monthTotal");
@@ -62,11 +83,35 @@ const historyCount =
 const exportBtn =
     document.getElementById("exportBtn");
 
+const backupBtn =
+    document.getElementById("backupBtn");
+
+const restoreBtn =
+    document.getElementById("restoreBtn");
+
+const restoreInput =
+    document.getElementById("restoreInput");
+
 const resetBtn =
     document.getElementById("resetBtn");
 
 const themeBtn =
     document.getElementById("themeBtn");
+
+
+/* CHART */
+
+const chartWrap =
+    document.getElementById("chartWrap");
+
+const chartEmpty =
+    document.getElementById("chartEmpty");
+
+const savingsChartWrap =
+    document.getElementById("savingsChartWrap");
+
+const savingsChartEmpty =
+    document.getElementById("savingsChartEmpty");
 
 
 /* MODALS */
@@ -94,6 +139,70 @@ const cancelConfirmBtn =
 
 const confirmResetBtn =
     document.getElementById("confirmResetBtn");
+
+
+/* SAVINGS ELEMENTS */
+
+const pandaBtn =
+    document.getElementById("pandaBtn");
+
+const savingsTotal =
+    document.getElementById("savingsTotal");
+
+const todaySaving =
+    document.getElementById("todaySaving");
+
+const dailyBar =
+    document.getElementById("dailyBar");
+
+const dailyStatus =
+    document.getElementById("dailyStatus");
+
+const addSavingsBtn =
+    document.getElementById("addSavingsBtn");
+
+const toggleSavingsBtn =
+    document.getElementById("toggleSavingsBtn");
+
+
+/* SAVINGS MODALS */
+
+const savingsModal =
+    document.getElementById("savingsModal");
+
+const savingsAmount =
+    document.getElementById("savingsAmount");
+
+const savingsNote =
+    document.getElementById("savingsNote");
+
+const savingsError =
+    document.getElementById("savingsError");
+
+const cancelSavingsBtn =
+    document.getElementById("cancelSavingsBtn");
+
+const confirmSavingsBtn =
+    document.getElementById("confirmSavingsBtn");
+
+const pandaAnim =
+    document.getElementById("pandaAnim");
+
+
+const savingsPinModal =
+    document.getElementById("savingsPinModal");
+
+const savingsPinInput =
+    document.getElementById("savingsPinInput");
+
+const savingsPinError =
+    document.getElementById("savingsPinError");
+
+const cancelSavingsPinBtn =
+    document.getElementById("cancelSavingsPinBtn");
+
+const verifySavingsPinBtn =
+    document.getElementById("verifySavingsPinBtn");
 
 
 /* ==============================
@@ -131,6 +240,41 @@ function loadExpenses() {
         console.error(error);
 
         expenses = [];
+    }
+}
+
+
+function saveSavings() {
+
+    localStorage.setItem(
+        SAVINGS_KEY,
+        JSON.stringify(savings)
+    );
+}
+
+
+function loadSavings() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(SAVINGS_KEY);
+
+        savings =
+            saved
+                ? JSON.parse(saved)
+                : [];
+
+        if (!Array.isArray(savings)) {
+
+            savings = [];
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        savings = [];
     }
 }
 
@@ -225,6 +369,23 @@ function categoryIcon(category) {
 }
 
 
+function subIcon(sub) {
+
+    const icons = {
+
+        Breakfast: "🍳",
+
+        Lunch: "🍱",
+
+        Dinner: "🍽️",
+
+        Snack: "🍪"
+    };
+
+    return icons[sub] || "";
+}
+
+
 /* ==============================
    DASHBOARD
 ============================== */
@@ -292,7 +453,7 @@ function updateDashboard() {
 
 
 /* ==============================
-   RENDER
+   RENDER EXPENSES
 ============================== */
 
 function renderExpenses() {
@@ -306,9 +467,20 @@ function renderExpenses() {
     const filtered =
         expenses.filter(expense => {
 
+            if (
+                activeFilter !== "All" &&
+                expense.category !== activeFilter
+            ) {
+
+                return false;
+            }
+
+
             const text = (
 
                 expense.category +
+                " " +
+                (expense.sub || "") +
                 " " +
                 expense.note +
                 " " +
@@ -365,6 +537,12 @@ function renderExpenses() {
             "expense-item";
 
 
+        const subBadge =
+            expense.sub
+                ? `<span class="expense-sub">${subIcon(expense.sub)} ${escapeHTML(expense.sub)}</span>`
+                : "";
+
+
         item.innerHTML = `
 
             <div class="expense-icon">
@@ -375,6 +553,7 @@ function renderExpenses() {
 
                 <div class="expense-category">
                     ${escapeHTML(expense.category)}
+                    ${subBadge}
                 </div>
 
                 <div class="expense-note">
@@ -428,6 +607,35 @@ function renderExpenses() {
 
 
 /* ==============================
+   FOOD SUB-TYPE TOGGLE
+============================== */
+
+categoryInput.addEventListener(
+    "change",
+    () => {
+
+        if (
+            categoryInput.value === "Food"
+        ) {
+
+            foodSubGroup.classList.remove(
+                "hidden"
+            );
+        }
+
+        else {
+
+            foodSubGroup.classList.add(
+                "hidden"
+            );
+
+            foodSubInput.value = "";
+        }
+    }
+);
+
+
+/* ==============================
    ADD EXPENSE
 ============================== */
 
@@ -444,6 +652,12 @@ expenseForm.addEventListener(
 
         const category =
             categoryInput.value;
+
+
+        const sub =
+            category === "Food"
+                ? foodSubInput.value
+                : "";
 
 
         const note =
@@ -476,6 +690,8 @@ expenseForm.addEventListener(
 
             category,
 
+            sub,
+
             note,
 
             createdAt:
@@ -491,10 +707,16 @@ expenseForm.addEventListener(
 
         expenseForm.reset();
 
+        foodSubGroup.classList.add(
+            "hidden"
+        );
+
 
         updateDashboard();
 
         renderExpenses();
+
+        renderCategoryChart();
 
 
         amountInput.focus();
@@ -543,17 +765,373 @@ function deleteExpense(id) {
     updateDashboard();
 
     renderExpenses();
+
+    renderCategoryChart();
 }
 
 
 /* ==============================
-   SEARCH
+   SEARCH + FILTER
 ============================== */
 
 searchInput.addEventListener(
     "input",
     renderExpenses
 );
+
+
+filterRow.addEventListener(
+    "click",
+    event => {
+
+        const chip =
+            event.target.closest(
+                ".filter-chip"
+            );
+
+
+        if (!chip) {
+
+            return;
+        }
+
+
+        activeFilter =
+            chip.dataset.filter;
+
+
+        filterRow
+            .querySelectorAll(
+                ".filter-chip"
+            )
+            .forEach(btn => {
+
+                btn.classList.toggle(
+                    "active",
+                    btn === chip
+                );
+            });
+
+
+        renderExpenses();
+    }
+);
+
+
+/* ==============================
+   CATEGORY CHART (This Month)
+============================== */
+
+const CATEGORIES = [
+
+    "Food",
+
+    "Transport",
+
+    "Shopping",
+
+    "Bills",
+
+    "Mobile",
+
+    "Other"
+];
+
+
+function monthExpenseTotals() {
+
+    const currentMonth =
+        monthKey(new Date());
+
+
+    const totals = {};
+
+
+    CATEGORIES.forEach(cat => {
+
+        totals[cat] = 0;
+    });
+
+
+    expenses.forEach(expense => {
+
+        const date =
+            new Date(expense.createdAt);
+
+
+        if (
+            monthKey(date) !== currentMonth
+        ) {
+
+            return;
+        }
+
+
+        const cat =
+            expense.category;
+
+
+        if (
+            !(cat in totals)
+        ) {
+
+            totals[cat] = 0;
+        }
+
+
+        totals[cat] +=
+            Number(expense.amount) || 0;
+    });
+
+
+    return totals;
+}
+
+
+function renderCategoryChart() {
+
+    const totals =
+        monthExpenseTotals();
+
+
+    const entries =
+        Object.entries(totals)
+            .filter(([, value]) => value > 0)
+            .sort((a, b) => b[1] - a[1]);
+
+
+    chartWrap.innerHTML = "";
+
+
+    if (entries.length === 0) {
+
+        chartEmpty.style.display =
+            "block";
+
+        return;
+    }
+
+
+    chartEmpty.style.display =
+        "none";
+
+
+    const max =
+        Math.max(...entries.map(e => e[1]));
+
+
+    entries.forEach(([cat, value]) => {
+
+        const row =
+            document.createElement("div");
+
+        row.className =
+            "chart-row";
+
+        row.dataset.cat = cat;
+
+
+        const pct =
+            max > 0
+                ? (value / max) * 100
+                : 0;
+
+
+        row.innerHTML = `
+
+            <div class="chart-label">
+                ${categoryIcon(cat)} ${escapeHTML(cat)}
+            </div>
+
+            <div class="chart-bar-track">
+                <div
+                    class="chart-bar-fill"
+                    style="width:${pct}%"
+                ></div>
+            </div>
+
+            <div class="chart-value">
+                ${formatMoney(value)}
+            </div>
+
+        `;
+
+
+        row.addEventListener(
+            "click",
+            () => {
+
+                activeFilter = cat;
+
+
+                filterRow
+                    .querySelectorAll(
+                        ".filter-chip"
+                    )
+                    .forEach(btn => {
+
+                        btn.classList.toggle(
+                            "active",
+                            btn.dataset.filter === cat
+                        );
+                    });
+
+
+                renderExpenses();
+
+
+                document
+                    .querySelector(
+                        "#expenseList"
+                    )
+                    .scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+            }
+        );
+
+
+        chartWrap.appendChild(row);
+    });
+}
+
+
+/* ==============================
+   MONTHLY SAVINGS CHART
+============================== */
+
+function lastSixMonths() {
+
+    const list = [];
+
+    const now = new Date();
+
+
+    for (let i = 5; i >= 0; i--) {
+
+        const d =
+            new Date(
+                now.getFullYear(),
+                now.getMonth() - i,
+                1
+            );
+
+
+        list.push({
+
+            key: monthKey(d),
+
+            label: d.toLocaleString(
+                "en-BD",
+                { month: "short" }
+            )
+        });
+    }
+
+
+    return list;
+}
+
+
+function renderSavingsChart() {
+
+    const months =
+        lastSixMonths();
+
+
+    const totals = {};
+
+
+    months.forEach(m => {
+
+        totals[m.key] = 0;
+    });
+
+
+    savings.forEach(item => {
+
+        const key =
+            monthKey(
+                new Date(item.createdAt)
+            );
+
+
+        if (key in totals) {
+
+            totals[key] +=
+                Number(item.amount) || 0;
+        }
+    });
+
+
+    savingsChartWrap.innerHTML = "";
+
+
+    const hasData =
+        months.some(m => totals[m.key] > 0);
+
+
+    if (!hasData) {
+
+        savingsChartEmpty.style.display =
+            "block";
+
+        return;
+    }
+
+
+    savingsChartEmpty.style.display =
+        "none";
+
+
+    const max =
+        Math.max(...months.map(m => totals[m.key])) || 1;
+
+
+    months.forEach(m => {
+
+        const value =
+            totals[m.key];
+
+        const pct =
+            (value / max) * 100;
+
+
+        const row =
+            document.createElement("div");
+
+        row.className =
+            "chart-row";
+
+
+        row.innerHTML = `
+
+            <div class="chart-label">
+                ${escapeHTML(m.label)}
+            </div>
+
+            <div class="chart-bar-track">
+                <div
+                    class="chart-bar-fill"
+                    style="width:${pct}%"
+                ></div>
+            </div>
+
+            <div class="chart-value">
+                ${
+                    savingsUnlocked
+                        ? formatMoney(value)
+                        : "৳ • •"
+                }
+            </div>
+
+        `;
+
+
+        savingsChartWrap.appendChild(row);
+    });
+}
 
 
 /* ==============================
@@ -609,7 +1187,11 @@ function exportTXT() {
 
 
             txt +=
-                `${index + 1}. ${expense.category}\n`;
+                `${index + 1}. ${expense.category}${
+                    expense.sub
+                        ? " - " + expense.sub
+                        : ""
+                }\n`;
 
             txt +=
                 `Amount: ${formatMoney(amount)}\n`;
@@ -618,344 +1200,4 @@ function exportTXT() {
                 `Note: ${expense.note || "No note"}\n`;
 
             txt +=
-                `Date: ${formatDate(expense.createdAt)}\n`;
-
-            txt +=
-                "------------------------------\n";
-        }
-    );
-
-
-    txt += "\n";
-
-    txt +=
-        `Total Expenses: ${formatMoney(total)}\n`;
-
-    txt +=
-        `Total Entries: ${sorted.length}\n`;
-
-    txt +=
-        `Exported: ${formatDate(new Date().toISOString())}\n`;
-
-
-    const blob =
-        new Blob(
-            [txt],
-            {
-                type:
-                    "text/plain;charset=utf-8"
-            }
-        );
-
-
-    const url =
-        URL.createObjectURL(blob);
-
-
-    const link =
-        document.createElement("a");
-
-
-    link.href = url;
-
-
-    const now =
-        new Date();
-
-
-    link.download =
-        `MyExpense-${dateKey(now)}.txt`;
-
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-
-    URL.revokeObjectURL(url);
-}
-
-
-exportBtn.addEventListener(
-    "click",
-    exportTXT
-);
-
-
-/* ==============================
-   RESET SECURITY
-============================== */
-
-resetBtn.addEventListener(
-    "click",
-    openPinModal
-);
-
-
-function openPinModal() {
-
-    pinInput.value = "";
-
-    pinError.textContent = "";
-
-    pinModal.classList.remove(
-        "hidden"
-    );
-
-    setTimeout(
-        () => pinInput.focus(),
-        100
-    );
-}
-
-
-function closePinModal() {
-
-    pinModal.classList.add(
-        "hidden"
-    );
-}
-
-
-function closeConfirmModal() {
-
-    confirmModal.classList.add(
-        "hidden"
-    );
-}
-
-
-cancelPinBtn.addEventListener(
-    "click",
-    closePinModal
-);
-
-
-cancelConfirmBtn.addEventListener(
-    "click",
-    closeConfirmModal
-);
-
-
-/* ==============================
-   VERIFY PIN
-============================== */
-
-verifyPinBtn.addEventListener(
-    "click",
-    verifyPIN
-);
-
-
-pinInput.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.key === "Enter"
-        ) {
-
-            verifyPIN();
-        }
-    }
-);
-
-
-function verifyPIN() {
-
-    const now =
-        Date.now();
-
-
-    if (
-        now < lockedUntil
-    ) {
-
-        const seconds =
-            Math.ceil(
-                (lockedUntil - now) / 1000
-            );
-
-
-        pinError.textContent =
-            `Too many attempts. Try again in ${seconds}s.`;
-
-        return;
-    }
-
-
-    const pin =
-        pinInput.value.trim();
-
-
-    if (
-        pin === RESET_PIN
-    ) {
-
-        resetAttempts = 0;
-
-        lockedUntil = 0;
-
-        closePinModal();
-
-        confirmModal.classList.remove(
-            "hidden"
-        );
-
-        return;
-    }
-
-
-    resetAttempts++;
-
-
-    if (
-        resetAttempts >= MAX_ATTEMPTS
-    ) {
-
-        lockedUntil =
-            Date.now() +
-            LOCK_TIME;
-
-        resetAttempts = 0;
-
-
-        pinError.textContent =
-            "3 wrong attempts. Reset locked for 60 seconds.";
-
-        return;
-    }
-
-
-    const remaining =
-        MAX_ATTEMPTS -
-        resetAttempts;
-
-
-    pinError.textContent =
-        `Wrong PIN. ${remaining} attempt(s) remaining.`;
-}
-
-
-/* ==============================
-   CONFIRM RESET
-============================== */
-
-confirmResetBtn.addEventListener(
-    "click",
-    () => {
-
-        expenses = [];
-
-        saveExpenses();
-
-
-        closeConfirmModal();
-
-
-        updateDashboard();
-
-        renderExpenses();
-
-
-        alert(
-            "All expense data has been deleted."
-        );
-    }
-);
-
-
-/* ==============================
-   THEME
-============================== */
-
-function loadTheme() {
-
-    const theme =
-        localStorage.getItem(
-            THEME_KEY
-        );
-
-
-    if (theme === "dark") {
-
-        document.body.classList.add(
-            "dark"
-        );
-    }
-}
-
-
-function toggleTheme() {
-
-    const isDark =
-        document.body.classList.toggle(
-            "dark"
-        );
-
-
-    localStorage.setItem(
-        THEME_KEY,
-        isDark
-            ? "dark"
-            : "light"
-    );
-}
-
-
-themeBtn.addEventListener(
-    "click",
-    toggleTheme
-);
-
-
-/* ==============================
-   SERVICE WORKER
-============================== */
-
-if (
-    "serviceWorker" in navigator
-) {
-
-    window.addEventListener(
-        "load",
-        () => {
-
-            navigator.serviceWorker
-                .register("./sw.js")
-                .then(
-                    registration => {
-
-                        console.log(
-                            "Service Worker registered:",
-                            registration.scope
-                        );
-                    }
-                )
-                .catch(
-                    error => {
-
-                        console.error(
-                            "Service Worker registration failed:",
-                            error
-                        );
-                    }
-                );
-        }
-    );
-}
-
-
-/* ==============================
-   START
-============================== */
-
-loadTheme();
-
-loadExpenses();
-
-updateDashboard();
-
-renderExpenses();
+                `Date
