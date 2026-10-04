@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#16c9d5"
+    >
+
+    <meta
+        name="description"
+        content="MyExpense - Personal expense tracker"
+    >
+
+    <link
+        rel="manifest"
+        href="./manifest.webmanifest"
+    >
+
+    <title>MyExpense</title>
+
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="topbar glass">
+
+        <div>
+            <div class="app-title">
+                MyExpense
+            </div>
+
+            <div class="app-subtitle">
+                Personal Expense Tracker
+            </div>
+        </div>
+
+        <button
+            id="themeBtn"
+            class="icon-btn"
+            aria-label="Toggle theme"
+        >
+            ◐
+        </button>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+    <main>
+
+        <section class="dashboard">
+
+            <div class="stat-card glass">
+                <div class="stat-icon">৳</div>
+
+                <div class="stat-label">
+                    This Month
+                </div>
+
+                <div
+                    id="monthTotal"
+                    class="stat-value"
+                >
+                    ৳0
+                </div>
+            </div>
+
+
+            <div class="stat-card glass">
+                <div class="stat-icon">◷</div>
+
+                <div class="stat-label">
+                    Today
+                </div>
+
+                <div
+                    id="todayTotal"
+                    class="stat-value"
+                >
+                    ৳0
+                </div>
+            </div>
+
+
+            <div class="stat-card glass">
+                <div class="stat-icon">#</div>
+
+                <div class="stat-label">
+                    Entries
+                </div>
+
+                <div
+                    id="entryCount"
+                    class="stat-value"
+                >
+                    0
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ADD EXPENSE -->
+        <section class="glass section-card">
+
+            <div class="section-title">
+                Add Expense
+            </div>
+
+            <form id="expenseForm">
+
+                <div class="input-group">
+
+                    <label for="amount">
+                        Amount
+                    </label>
+
+                    <input
+                        id="amount"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter amount"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        required
+                    >
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option value="Food">
+                            🍔 Food
+                        </option>
+
+                        <option value="Transport">
+                            🚗 Transport
+                        </option>
+
+                        <option value="Shopping">
+                            🛍️ Shopping
+                        </option>
+
+                        <option value="Bills">
+                            🧾 Bills
+                        </option>
+
+                        <option value="Mobile">
+                            📱 Mobile
+                        </option>
+
+                        <option value="Other">
+                            📦 Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="note">
+                        Note
+                    </label>
+
+                    <input
+                        id="note"
+                        type="text"
+                        maxlength="100"
+                        placeholder="What did you spend on?"
+                    >
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    type="submit"
+                >
+                    + Add Expense
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- HISTORY -->
+        <section class="glass section-card">
+
+            <div class="section-header">
+
+                <div class="section-title">
+                    Expense History
+                </div>
+
+                <div
+                    id="historyCount"
+                    class="small-text"
+                >
+                    0 entries
+                </div>
+
+            </div>
+
+
+            <div class="search-box">
+
+                <input
+                    id="searchInput"
+                    type="search"
+                    placeholder="Search expenses..."
+                >
+
+            </div>
+
+
+            <div
+                id="expenseList"
+                class="expense-list"
+            ></div>
+
+
+            <div
+                id="emptyState"
+                class="empty-state"
+            >
+                No expenses yet.
+            </div>
+
+        </section>
+
+
+        <!-- DATA -->
+        <section class="glass section-card">
+
+            <div class="section-title">
+                Data & Security
+            </div>
+
+            <div class="data-buttons">
+
+                <button
+                    id="exportBtn"
+                    class="secondary-btn"
+                >
+                    ↓ Export TXT
+                </button>
+
+                <button
+                    id="resetBtn"
+                    class="danger-btn"
+                >
+                    Reset All
+                </button>
+
+            </div>
+
+            <div class="security-note">
+                Your expense data is stored locally on this device.
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- RESET PIN MODAL -->
+<div
+    id="pinModal"
+    class="modal hidden"
+>
+
+    <div class="modal-card glass">
+
+        <div class="modal-title">
+            Security Check
+        </div>
+
+        <div class="modal-text">
+            Enter your reset PIN.
+        </div>
+
+        <input
+            id="pinInput"
+            type="password"
+            inputmode="numeric"
+            maxlength="4"
+            placeholder="PIN"
+        >
+
+        <div
+            id="pinError"
+            class="error-text"
+        ></div>
+
+        <div class="modal-buttons">
+
+            <button
+                id="cancelPinBtn"
+                class="secondary-btn"
+            >
+                Cancel
+            </button>
+
+            <button
+                id="verifyPinBtn"
+                class="danger-btn"
+            >
+                Verify
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CONFIRM MODAL -->
+<div
+    id="confirmModal"
+    class="modal hidden"
+>
+
+    <div class="modal-card glass">
+
+        <div class="modal-title">
+            Delete Everything?
+        </div>
+
+        <div class="modal-text">
+            This will permanently delete all saved expenses from this device.
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                id="cancelConfirmBtn"
+                class="secondary-btn"
+            >
+                Cancel
+            </button>
+
+            <button
+                id="confirmResetBtn"
+                class="danger-btn"
+            >
+                Delete All
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="./script.js"></script>
+
+</body>
+</html>
