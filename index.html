@@ -35,14 +35,12 @@
 
 <div class="app-shell">
 
-    <!-- HEADER -->
     <header class="topbar glass">
 
         <div>
             <div class="app-title">
                 MyExpense
             </div>
-
             <div class="app-subtitle">
                 Personal Expense Tracker
             </div>
@@ -61,52 +59,29 @@
 
     <main>
 
-        <!-- DASHBOARD -->
         <section class="dashboard">
 
             <div class="stat-card glass">
                 <div class="stat-icon">৳</div>
-                <div class="stat-label">
-                    This Month
-                </div>
-                <div
-                    id="monthTotal"
-                    class="stat-value"
-                >
-                    ৳0
-                </div>
+                <div class="stat-label">This Month</div>
+                <div id="monthTotal" class="stat-value">৳0</div>
             </div>
 
             <div class="stat-card glass">
                 <div class="stat-icon">◷</div>
-                <div class="stat-label">
-                    Today
-                </div>
-                <div
-                    id="todayTotal"
-                    class="stat-value"
-                >
-                    ৳0
-                </div>
+                <div class="stat-label">Today</div>
+                <div id="todayTotal" class="stat-value">৳0</div>
             </div>
 
             <div class="stat-card glass">
                 <div class="stat-icon">#</div>
-                <div class="stat-label">
-                    Entries
-                </div>
-                <div
-                    id="entryCount"
-                    class="stat-value"
-                >
-                    0
-                </div>
+                <div class="stat-label">Entries</div>
+                <div id="entryCount" class="stat-value">0</div>
             </div>
 
         </section>
 
 
-        <!-- ADD EXPENSE -->
         <section class="glass section-card">
 
             <div class="section-title">
@@ -116,9 +91,7 @@
             <form id="expenseForm">
 
                 <div class="input-group">
-                    <label for="amount">
-                        Amount
-                    </label>
+                    <label for="amount">Amount</label>
                     <input
                         id="amount"
                         type="number"
@@ -130,68 +103,31 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="category">
-                        Category
-                    </label>
-                    <select
-                        id="category"
-                        required
-                    >
-                        <option value="">
-                            Select category
-                        </option>
-                        <option value="Food">
-                            🍔 Food
-                        </option>
-                        <option value="Transport">
-                            🚗 Transport
-                        </option>
-                        <option value="Shopping">
-                            🛍️ Shopping
-                        </option>
-                        <option value="Bills">
-                            🧾 Bills
-                        </option>
-                        <option value="Mobile">
-                            📱 Mobile
-                        </option>
-                        <option value="Other">
-                            📦 Other
-                        </option>
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                        <option value="">Select category</option>
+                        <option value="Food">🍔 Food</option>
+                        <option value="Transport">🚗 Transport</option>
+                        <option value="Shopping">🛍️ Shopping</option>
+                        <option value="Bills">🧾 Bills</option>
+                        <option value="Mobile">📱 Mobile</option>
+                        <option value="Other">📦 Other</option>
                     </select>
                 </div>
 
-                <!-- FOOD SUB-TYPE -->
-                <div
-                    id="foodSubGroup"
-                    class="input-group hidden"
-                >
-                    <label for="foodSub">
-                        Food Type
-                    </label>
+                <div id="foodSubGroup" class="input-group hidden">
+                    <label for="foodSub">Food Type</label>
                     <select id="foodSub">
-                        <option value="">
-                            Select type
-                        </option>
-                        <option value="Breakfast">
-                            🍳 Breakfast
-                        </option>
-                        <option value="Lunch">
-                            🍱 Lunch
-                        </option>
-                        <option value="Dinner">
-                            🍽️ Dinner
-                        </option>
-                        <option value="Snack">
-                            🍪 Snack
-                        </option>
+                        <option value="">Select type</option>
+                        <option value="Breakfast">🍳 Breakfast</option>
+                        <option value="Lunch">🍱 Lunch</option>
+                        <option value="Dinner">🍽️ Dinner</option>
+                        <option value="Snack">🍪 Snack</option>
                     </select>
                 </div>
 
                 <div class="input-group">
-                    <label for="note">
-                        Note
-                    </label>
+                    <label for="note">Note</label>
                     <input
                         id="note"
                         type="text"
@@ -200,10 +136,7 @@
                     >
                 </div>
 
-                <button
-                    class="primary-btn"
-                    type="submit"
-                >
+                <button class="primary-btn" type="submit">
                     + Add Expense
                 </button>
 
@@ -212,7 +145,6 @@
         </section>
 
 
-        <!-- MONTHLY CHART -->
         <section class="glass section-card">
 
             <div class="section-header">
@@ -224,32 +156,22 @@
                 </div>
             </div>
 
-            <div
-                id="chartWrap"
-                class="chart-wrap"
-            ></div>
+            <div id="chartWrap" class="chart-wrap"></div>
 
-            <div
-                id="chartEmpty"
-                class="empty-state"
-            >
+            <div id="chartEmpty" class="empty-state">
                 No data this month.
             </div>
 
         </section>
 
 
-        <!-- HISTORY -->
         <section class="glass section-card">
 
             <div class="section-header">
                 <div class="section-title">
                     Expense History
                 </div>
-                <div
-                    id="historyCount"
-                    class="small-text"
-                >
+                <div id="historyCount" class="small-text">
                     0 entries
                 </div>
             </div>
@@ -262,79 +184,31 @@
                 >
             </div>
 
-            <!-- CATEGORY FILTER -->
-            <div
-                id="filterRow"
-                class="filter-row"
-            >
-                <button
-                    class="filter-chip active"
-                    data-filter="All"
-                >
-                    All
-                </button>
-                <button
-                    class="filter-chip"
-                    data-filter="Food"
-                >
-                    🍔 Food
-                </button>
-                <button
-                    class="filter-chip"
-                    data-filter="Transport"
-                >
-                    🚗 Transport
-                </button>
-                <button
-                    class="filter-chip"
-                    data-filter="Shopping"
-                >
-                    🛍️ Shopping
-                </button>
-                <button
-                    class="filter-chip"
-                    data-filter="Bills"
-                >
-                    🧾 Bills
-                </button>
-                <button
-                    class="filter-chip"
-                    data-filter="Mobile"
-                >
-                    📱 Mobile
-                </button>
-                <button
-                    class="filter-chip"
-                    data-filter="Other"
-                >
-                    📦 Other
-                </button>
+            <div id="filterRow" class="filter-row">
+                <button class="filter-chip active" data-filter="All">All</button>
+                <button class="filter-chip" data-filter="Food">🍔 Food</button>
+                <button class="filter-chip" data-filter="Transport">🚗 Transport</button>
+                <button class="filter-chip" data-filter="Shopping">🛍️ Shopping</button>
+                <button class="filter-chip" data-filter="Bills">🧾 Bills</button>
+                <button class="filter-chip" data-filter="Mobile">📱 Mobile</button>
+                <button class="filter-chip" data-filter="Other">📦 Other</button>
             </div>
 
-            <div
-                id="expenseList"
-                class="expense-list"
-            ></div>
+            <div id="expenseList" class="expense-list"></div>
 
-            <div
-                id="emptyState"
-                class="empty-state"
-            >
+            <div id="emptyState" class="empty-state">
                 No expenses yet.
             </div>
 
         </section>
 
 
-        <!-- SAVINGS -->
         <section class="glass section-card savings-section">
 
             <div class="section-header">
-
                 <div class="section-title">
                     🐼 My Savings
                 </div>
-
                 <button
                     id="toggleSavingsBtn"
                     class="icon-btn small-icon"
@@ -342,7 +216,6 @@
                 >
                     👁
                 </button>
-
             </div>
 
             <div class="panda-wrap">
@@ -356,13 +229,8 @@
                 </button>
 
                 <div class="panda-balance">
-                    <div class="panda-label">
-                        Total Savings
-                    </div>
-                    <div
-                        id="savingsTotal"
-                        class="panda-value locked"
-                    >
+                    <div class="panda-label">Total Savings</div>
+                    <div id="savingsTotal" class="panda-value locked">
                         ৳ • • • •
                     </div>
                 </div>
@@ -382,25 +250,16 @@
                 </div>
 
                 <div class="progress-track">
-                    <div
-                        id="dailyBar"
-                        class="progress-fill"
-                    ></div>
+                    <div id="dailyBar" class="progress-fill"></div>
                 </div>
 
-                <div
-                    id="dailyStatus"
-                    class="small-text"
-                >
+                <div id="dailyStatus" class="small-text">
                     Minimum ৳10 per day
                 </div>
 
             </div>
 
-            <button
-                id="addSavingsBtn"
-                class="primary-btn savings-btn"
-            >
+            <button id="addSavingsBtn" class="primary-btn savings-btn">
                 + Add Savings
             </button>
 
@@ -411,7 +270,6 @@
         </section>
 
 
-        <!-- MONTHLY SAVINGS CHART -->
         <section class="glass section-card">
 
             <div class="section-header">
@@ -423,22 +281,15 @@
                 </div>
             </div>
 
-            <div
-                id="savingsChartWrap"
-                class="chart-wrap"
-            ></div>
+            <div id="savingsChartWrap" class="chart-wrap"></div>
 
-            <div
-                id="savingsChartEmpty"
-                class="empty-state"
-            >
+            <div id="savingsChartEmpty" class="empty-state">
                 No savings yet.
             </div>
 
         </section>
 
 
-        <!-- DATA -->
         <section class="glass section-card">
 
             <div class="section-title">
@@ -447,31 +298,19 @@
 
             <div class="data-buttons">
 
-                <button
-                    id="exportBtn"
-                    class="secondary-btn"
-                >
+                <button id="exportBtn" class="secondary-btn">
                     ↓ Export TXT
                 </button>
 
-                <button
-                    id="backupBtn"
-                    class="secondary-btn"
-                >
+                <button id="backupBtn" class="secondary-btn">
                     💾 Backup
                 </button>
 
-                <button
-                    id="restoreBtn"
-                    class="secondary-btn"
-                >
+                <button id="restoreBtn" class="secondary-btn">
                     📂 Restore
                 </button>
 
-                <button
-                    id="resetBtn"
-                    class="danger-btn"
-                >
+                <button id="resetBtn" class="danger-btn">
                     Reset All
                 </button>
 
@@ -495,21 +334,10 @@
 </div>
 
 
-<!-- RESET PIN MODAL -->
-<div
-    id="pinModal"
-    class="modal hidden"
->
+<div id="pinModal" class="modal hidden">
     <div class="modal-card glass">
-
-        <div class="modal-title">
-            Security Check
-        </div>
-
-        <div class="modal-text">
-            Enter your reset PIN.
-        </div>
-
+        <div class="modal-title">Security Check</div>
+        <div class="modal-text">Enter your reset PIN.</div>
         <input
             id="pinInput"
             type="password"
@@ -517,87 +345,36 @@
             maxlength="4"
             placeholder="PIN"
         >
-
-        <div
-            id="pinError"
-            class="error-text"
-        ></div>
-
+        <div id="pinError" class="error-text"></div>
         <div class="modal-buttons">
-            <button
-                id="cancelPinBtn"
-                class="secondary-btn"
-            >
-                Cancel
-            </button>
-            <button
-                id="verifyPinBtn"
-                class="danger-btn"
-            >
-                Verify
-            </button>
+            <button id="cancelPinBtn" class="secondary-btn">Cancel</button>
+            <button id="verifyPinBtn" class="danger-btn">Verify</button>
         </div>
-
     </div>
 </div>
 
 
-<!-- CONFIRM MODAL -->
-<div
-    id="confirmModal"
-    class="modal hidden"
->
+<div id="confirmModal" class="modal hidden">
     <div class="modal-card glass">
-
-        <div class="modal-title">
-            Delete Everything?
-        </div>
-
+        <div class="modal-title">Delete Everything?</div>
         <div class="modal-text">
             This will permanently delete all saved expenses and savings from this device.
         </div>
-
         <div class="modal-buttons">
-            <button
-                id="cancelConfirmBtn"
-                class="secondary-btn"
-            >
-                Cancel
-            </button>
-            <button
-                id="confirmResetBtn"
-                class="danger-btn"
-            >
-                Delete All
-            </button>
+            <button id="cancelConfirmBtn" class="secondary-btn">Cancel</button>
+            <button id="confirmResetBtn" class="danger-btn">Delete All</button>
         </div>
-
     </div>
 </div>
 
 
-<!-- ADD SAVINGS MODAL -->
-<div
-    id="savingsModal"
-    class="modal hidden"
->
+<div id="savingsModal" class="modal hidden">
     <div class="modal-card glass savings-modal-card">
-
-        <div class="modal-title">
-            💰 Add Savings
-        </div>
-
+        <div class="modal-title">💰 Add Savings</div>
         <div class="modal-text">
             Minimum ৳10 per day. Save a little, grow a lot.
         </div>
-
-        <div
-            id="pandaAnim"
-            class="panda-anim"
-        >
-            🐼
-        </div>
-
+        <div id="pandaAnim" class="panda-anim">🐼</div>
         <input
             id="savingsAmount"
             type="number"
@@ -605,7 +382,6 @@
             step="1"
             placeholder="Enter amount (min ৳10)"
         >
-
         <input
             id="savingsNote"
             type="text"
@@ -613,46 +389,21 @@
             placeholder="Note (optional)"
             style="margin-top:10px;"
         >
-
-        <div
-            id="savingsError"
-            class="error-text"
-        ></div>
-
+        <div id="savingsError" class="error-text"></div>
         <div class="modal-buttons">
-            <button
-                id="cancelSavingsBtn"
-                class="secondary-btn"
-            >
-                Cancel
-            </button>
-            <button
-                id="confirmSavingsBtn"
-                class="primary-btn"
-            >
-                Save
-            </button>
+            <button id="cancelSavingsBtn" class="secondary-btn">Cancel</button>
+            <button id="confirmSavingsBtn" class="primary-btn">Save</button>
         </div>
-
     </div>
 </div>
 
 
-<!-- SAVINGS PIN MODAL -->
-<div
-    id="savingsPinModal"
-    class="modal hidden"
->
+<div id="savingsPinModal" class="modal hidden">
     <div class="modal-card glass">
-
-        <div class="modal-title">
-            🔒 Savings Locked
-        </div>
-
+        <div class="modal-title">🔒 Savings Locked</div>
         <div class="modal-text">
             Enter your savings PIN to view the total.
         </div>
-
         <input
             id="savingsPinInput"
             type="password"
@@ -660,27 +411,11 @@
             maxlength="4"
             placeholder="PIN"
         >
-
-        <div
-            id="savingsPinError"
-            class="error-text"
-        ></div>
-
+        <div id="savingsPinError" class="error-text"></div>
         <div class="modal-buttons">
-            <button
-                id="cancelSavingsPinBtn"
-                class="secondary-btn"
-            >
-                Cancel
-            </button>
-            <button
-                id="verifySavingsPinBtn"
-                class="primary-btn"
-            >
-                Unlock
-            </button>
+            <button id="cancelSavingsPinBtn" class="secondary-btn">Cancel</button>
+            <button id="verifySavingsPinBtn" class="primary-btn">Unlock</button>
         </div>
-
     </div>
 </div>
 
