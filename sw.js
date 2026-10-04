@@ -6,7 +6,9 @@ const ASSETS = [
     "./index.html",
     "./style.css",
     "./script.js",
-    "./manifest.webmanifest"
+    "./manifest.webmanifest",
+    "./icons/icon-192.png",
+    "./icons/icon-512.png"
 ];
 
 
@@ -84,6 +86,65 @@ self.addEventListener(
             return;
         }
 
+
+        const url =
+            new URL(event.request.url);
+
+
+        /* skip non-http(s) */
+
+        if (
+            !url.protocol.startsWith("http")
+        ) {
+
+            return;
+        }
+
+
+        /* network-first for HTML */
+
+        if (
+            event.request.mode === "navigate"
+        ) {
+
+            event.respondWith(
+
+                fetch(event.request)
+                    .then(
+                        response => {
+
+                            const copy =
+                                response.clone();
+
+                            caches
+                                .open(CACHE_NAME)
+                                .then(
+                                    cache => {
+
+                                        cache.put(
+                                            "./index.html",
+                                            copy
+                                        );
+                                    }
+                                );
+
+                            return response;
+                        }
+                    )
+                    .catch(
+                        () =>
+                            caches.match(
+                                "./index.html"
+                            )
+                    )
+
+            );
+
+            return;
+        }
+
+
+        /* cache-first for others */
 
         event.respondWith(
 
