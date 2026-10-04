@@ -1,4 +1,4 @@
-const CACHE_NAME = "myexpense-v2";
+const CACHE_NAME = "myexpense-v3";
 
 
 const ASSETS = [
