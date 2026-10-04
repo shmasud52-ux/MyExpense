@@ -1,0 +1,16 @@
+{
+    "name": "MyExpense - Expense Tracker",
+    "short_name": "MyExpense",
+    "description": "A simple personal expense tracker with Liquid Glass UI.",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#e9efed",
+    "theme_color": "#16c9d5",
+    "lang": "en",
+    "categories": [
+        "finance",
+        "productivity"
+    ]
+}
