@@ -550,64 +550,34 @@ button:hover {
     margin-bottom: 13px;
 }
 
-
 /* FILTER CHIPS */
 
 .filter-row {
-
     display: flex;
-
     flex-wrap: wrap;
-
     gap: 8px;
-
     margin-bottom: 13px;
 }
 
-
 .filter-chip {
-
     padding: 7px 13px;
-
     border-radius: 999px;
-
-    border:
-        1px solid var(--border);
-
-    background:
-        rgba(255,255,255,0.30);
-
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.30);
     color: var(--text);
-
     font-size: 12px;
-
     font-weight: 650;
-
-    transition:
-        transform 0.15s ease,
-        background 0.2s ease;
+    transition: transform 0.15s ease, background 0.2s ease;
 }
 
-
 .filter-chip:active {
-
     transform: scale(0.95);
 }
 
-
 .filter-chip.active {
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--cyan),
-            var(--green)
-        );
-
+    background: linear-gradient(135deg, var(--cyan), var(--green));
     color: #06302f;
 }
-
-
 /* EXPENSE */
 
 .expense-list {
@@ -681,22 +651,13 @@ button:hover {
 
 
 .expense-sub {
-
     display: inline-block;
-
     margin-left: 6px;
-
     font-size: 10px;
-
     padding: 2px 7px;
-
     border-radius: 999px;
-
-    background:
-        rgba(34,211,224,0.18);
-
+    background: rgba(34,211,224,0.18);
     color: var(--cyan-dark);
-
     font-weight: 700;
 }
 
@@ -776,53 +737,56 @@ button:hover {
 /* CHART */
 
 .chart-wrap {
-
     display: flex;
-
     flex-direction: column;
-
     gap: 10px;
 }
-
 
 .chart-row {
-
     display: flex;
-
     align-items: center;
-
     gap: 10px;
-
     cursor: pointer;
-
     padding: 4px 0;
-
-    transition:
-        transform 0.15s ease;
+    transition: transform 0.15s ease;
 }
 
-
 .chart-row:active {
-
     transform: scale(0.99);
 }
 
-
 .chart-label {
-
     width: 92px;
-
     flex-shrink: 0;
-
     font-size: 12px;
-
     font-weight: 700;
-
     overflow: hidden;
-
     text-overflow: ellipsis;
-
     white-space: nowrap;
+}
+
+.chart-bar-track {
+    flex: 1;
+    height: 22px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.30);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.chart-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+    transition: width 0.6s ease;
+}
+
+.chart-value {
+    width: 82px;
+    flex-shrink: 0;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 700;
 }
 
 
@@ -879,12 +843,8 @@ button:hover {
 /* DATA */
 
 .data-buttons {
-
     display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
